@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content" style="max-width: 460px; margin-top: 3rem;">
+    <div class="card">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0.85rem; background: var(--primary-light); border: 1px solid #bfdbfe; border-radius: var(--radius-full); margin-bottom: 1rem;">
+          <img src="/favicon.svg" alt="Logo" width="20" height="20" style="vertical-align: middle;">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">Resume Analyzer & Mock Interview</span>
+        </div>
+        <h1 class="page-title" style="font-size: 1.6rem;">Welcome Back</h1>
+        <p class="page-subtitle">Log in to access your resumes and mock interviews</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-control" required placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="form-control" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+          Log In
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+        Don't have an account? <a href="/register.html">Create one now</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Auth.redirectIfAuthenticated();
+
+      const form = document.getElementById('login-form');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlert('alert-container');
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Logging in...';
+
+        try {
+          const res = await API.post('/api/auth/login', { email, password });
+          API.setToken(res.token);
+          API.setUser({
+            id: res.userId,
+            name: res.name,
+            email: res.email,
+            targetRole: res.targetRole
+          });
+          window.location.href = '/dashboard.html';
+        } catch (err) {
+          showAlert('alert-container', err.message || 'Login failed. Please verify credentials.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Log In';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Results & Evaluation — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .rubric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .rubric-box {
+      background: var(--bg-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .rubric-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .rubric-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+    .eval-card {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+          <a href="/interview-history.html">&larr; Back to Interview History</a>
+        </div>
+        <h1 class="page-title" id="results-title">Mock Interview Results</h1>
+        <p class="page-subtitle" id="results-subtitle">Comprehensive rubric evaluation, criteria breakdown, and actionable learning suggestions.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="/interview-setup.html" class="btn btn-primary">Take Another Interview</a>
+        <a id="review-resume-btn" href="#" class="btn btn-secondary">Review Resume</a>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Demo Mode Notice Banner -->
+    <div id="demo-mode-banner" style="display: none; background: #fefce8; border: 1px solid #fef08a; border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: #713f12;">
+      ℹ️ <strong>Demo Mode Active:</strong> External AI provider key is not configured. Answer evaluations and questions are powered by our built-in deterministic rubric engine. Scores reflect real rubric criteria and are not arbitrary.
+    </div>
+
+    <!-- Overall Performance Card -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; align-items: center;">
+        <div style="text-align: center; border-right: 1px solid var(--border-light); padding-right: 1rem;">
+          <div class="score-badge-circle" id="overall-score-gauge">
+            <span class="score-badge-value" id="overall-score-val">—</span>
+            <span class="score-badge-label">Score</span>
+          </div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-top: 0.5rem;" id="performance-rating-text">
+            Performance Rating
+          </div>
+        </div>
+
+        <div style="grid-column: span 2;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Interview Feedback Summary</h3>
+          <div style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;" id="summary-feedback-text">
+            Evaluating results...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strengths, Improvements, and Topics to Prepare -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title" style="font-size: 1.05rem;">💪 Key Strengths</h3>
+        </div>
+        <div id="strengths-text" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title" style="font-size: 1.05rem;">🎯 Areas for Improvement</h3>
+        </div>
+        <div id="improvements-text" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title" style="font-size: 1.05rem;">📚 Recommended Topics to Prepare</h3>
+        </div>
+        <div id="topics-text" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">—</div>
+      </div>
+    </div>
+
+    <!-- Question-by-Question Detailed Feedback -->
+    <div class="page-header" style="margin-top: 2.5rem; margin-bottom: 1rem;">
+      <div>
+        <h2 class="page-title" style="font-size: 1.4rem;">Question-by-Question Evaluation</h2>
+        <p class="page-subtitle">Inspect your submitted answers against the evaluation rubric and sample model responses.</p>
+      </div>
+    </div>
+
+    <div id="questions-eval-container">
+      <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading evaluation breakdown...</div>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/interview-results.js"></script>
+</body>
+</html>

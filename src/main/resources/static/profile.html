@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Profile & Settings — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content" style="max-width: 720px;">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Profile & Settings</h1>
+        <p class="page-subtitle">Manage your personal details, career targets, and account security.</p>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Profile Information Card -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <h3 class="card-title">Personal Profile</h3>
+      </div>
+      <form id="profile-form">
+        <div class="form-group">
+          <label class="form-label" for="profile-name">Full Name *</label>
+          <input type="text" id="profile-name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-email">Email Address</label>
+          <input type="email" id="profile-email" class="form-control" disabled style="background: var(--bg-subtle);">
+          <div class="form-text">Your primary login email is managed securely.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-target-role">Preferred Target Job Role</label>
+          <input type="text" id="profile-target-role" class="form-control" placeholder="e.g. Java Backend Developer, Cloud Engineer">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-headline">Professional Headline</label>
+          <input type="text" id="profile-headline" class="form-control" placeholder="e.g. Computer Science Student | Spring Boot & Cloud Enthusiast">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-bio">Brief Bio / Career Goals</label>
+          <textarea id="profile-bio" class="form-control" placeholder="Share a few sentences about your background and technical interests..."></textarea>
+        </div>
+
+        <button type="submit" id="save-profile-btn" class="btn btn-primary">
+          Save Profile Changes
+        </button>
+      </form>
+    </div>
+
+    <!-- Password Change Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Change Password</h3>
+      </div>
+      <div id="password-alert"></div>
+      <form id="password-form">
+        <div class="form-group">
+          <label class="form-label" for="current-password">Current Password *</label>
+          <input type="password" id="current-password" class="form-control" required autocomplete="current-password">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-password">New Password *</label>
+          <input type="password" id="new-password" class="form-control" required minlength="6" autocomplete="new-password">
+          <div class="form-text">Must be at least 6 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm-password">Confirm New Password *</label>
+          <input type="password" id="confirm-password" class="form-control" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" id="change-pass-btn" class="btn btn-secondary">
+          Update Password
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      Auth.requireAuth();
+
+      try {
+        const profile = await API.get('/api/profile');
+        document.getElementById('profile-name').value = profile.name || '';
+        document.getElementById('profile-email').value = profile.email || '';
+        document.getElementById('profile-target-role').value = profile.targetRole || '';
+        document.getElementById('profile-headline').value = profile.headline || '';
+        document.getElementById('profile-bio').value = profile.bio || '';
+      } catch (err) {
+        showAlert('alert-container', 'Failed to load profile: ' + err.message);
+      }
+
+      // Update Profile Submit
+      const profileForm = document.getElementById('profile-form');
+      const saveProfileBtn = document.getElementById('save-profile-btn');
+      profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlert('alert-container');
+
+        const name = document.getElementById('profile-name').value.trim();
+        const targetRole = document.getElementById('profile-target-role').value.trim();
+        const headline = document.getElementById('profile-headline').value.trim();
+        const bio = document.getElementById('profile-bio').value.trim();
+
+        saveProfileBtn.disabled = true;
+        saveProfileBtn.textContent = 'Saving...';
+
+        try {
+          const updated = await API.put('/api/profile', { name, targetRole, headline, bio });
+          const currentUser = API.getUser();
+          if (currentUser) {
+            currentUser.name = updated.name;
+            currentUser.targetRole = updated.targetRole;
+            API.setUser(currentUser);
+            Auth.renderNavbar();
+          }
+          showAlert('alert-container', 'Profile updated successfully!', 'success');
+        } catch (err) {
+          showAlert('alert-container', 'Failed to update profile: ' + err.message);
+        } finally {
+          saveProfileBtn.disabled = false;
+          saveProfileBtn.textContent = 'Save Profile Changes';
+        }
+      });
+
+      // Change Password Submit
+      const passwordForm = document.getElementById('password-form');
+      const changePassBtn = document.getElementById('change-pass-btn');
+      passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlert('password-alert');
+
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (newPassword !== confirmPassword) {
+          showAlert('password-alert', 'New passwords do not match.');
+          return;
+        }
+
+        changePassBtn.disabled = true;
+        changePassBtn.textContent = 'Updating...';
+
+        try {
+          await API.post('/api/profile/password', { currentPassword, newPassword });
+          showAlert('password-alert', 'Password changed successfully!', 'success');
+          passwordForm.reset();
+        } catch (err) {
+          showAlert('password-alert', err.message || 'Failed to change password.');
+        } finally {
+          changePassBtn.disabled = false;
+          changePassBtn.textContent = 'Update Password';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

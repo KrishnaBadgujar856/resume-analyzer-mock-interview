@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Editor & Suggestion Review — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .suggestion-card {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem;
+      margin-bottom: 0.75rem;
+      background: white;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+          <a id="back-to-report-link" href="#">&larr; Back to Quality Report</a>
+        </div>
+        <h1 class="page-title" id="editor-title">Resume Editor & Revisions</h1>
+        <p class="page-subtitle">Review targeted suggestions, revise your resume text, and save numbered versions.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <button id="save-version-btn" class="btn btn-primary">💾 Save Revised Version</button>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div class="editor-layout">
+      <!-- Left Column: Suggestions & Version History -->
+      <div>
+        <!-- Versions Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 0.75rem; padding-bottom: 0.5rem;">
+            <h3 class="card-title" style="font-size: 1.05rem;">Version History</h3>
+            <span class="badge badge-primary" id="version-count-badge">v1</span>
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" for="version-select" style="font-size: 0.85rem;">Load Previous Version:</label>
+            <select id="version-select" class="form-control" style="font-size: 0.85rem;"></select>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);" id="version-meta-text">
+            Active version saved in MySQL.
+          </div>
+        </div>
+
+        <!-- Suggestions Review Card -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom: 0.75rem; padding-bottom: 0.5rem;">
+            <h3 class="card-title" style="font-size: 1.05rem;">Actionable Suggestions</h3>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Click <strong>Apply to Text</strong> to insert the recommended phrasing directly into your editor.
+          </p>
+          <div id="suggestions-sidebar">
+            <div style="text-align: center; padding: 1rem; color: var(--text-muted);">Loading recommendations...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Resume Content Editor -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <span style="font-weight: 700;">Resume Content (Markdown / Plain Text)</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="word-char-count">0 characters • 0 words</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="format-bullets-btn" class="btn btn-secondary btn-sm" title="Insert bullet template">+ Bullet</button>
+            <button id="revert-btn" class="btn btn-secondary btn-sm" title="Revert changes">Revert</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <textarea id="resume-text-editor" class="form-control" style="min-height: 480px; font-family: monospace; font-size: 0.9rem; line-height: 1.5;"></textarea>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div style="flex: 1; min-width: 200px;">
+            <input type="text" id="version-note-input" class="form-control" placeholder="Version notes (e.g., Added metrics and Spring Boot section)">
+          </div>
+          <button id="save-bottom-btn" class="btn btn-primary">Save as New Version & Re-Analyze</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/resume-editor.js"></script>
+</body>
+</html>

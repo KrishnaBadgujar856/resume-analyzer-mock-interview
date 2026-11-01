@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Mock Interview — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content" style="max-width: 680px;">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Personalized Mock Interview Setup</h1>
+        <p class="page-subtitle">Configure an interview grounded in your resume projects and target role.</p>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div class="card">
+      <form id="interview-setup-form">
+        <!-- 1. Resume Selection -->
+        <div class="form-group">
+          <label class="form-label" for="resume-select">Select Resume to Ground Questions On *</label>
+          <select id="resume-select" class="form-control" required>
+            <option value="">Loading your resumes...</option>
+          </select>
+          <div class="form-text">Questions will reference the actual projects, skills, and tools in this document.</div>
+        </div>
+
+        <!-- 2. Target Job Role -->
+        <div class="form-group">
+          <label class="form-label" for="target-role-input">Target Job Role *</label>
+          <input type="text" id="target-role-input" class="form-control" required placeholder="e.g. Java Backend Developer, Full Stack Engineer">
+        </div>
+
+        <!-- 3. Interview Type -->
+        <div class="form-group">
+          <label class="form-label" for="interview-type-select">Interview Type *</label>
+          <select id="interview-type-select" class="form-control" required>
+            <option value="TECHNICAL" selected>Technical (Architecture, Frameworks, Fundamentals)</option>
+            <option value="HR">HR & Behavioral (STAR format, Teamwork, Leadership, Ownership)</option>
+            <option value="PROJECT_BASED">Project-Based (Deep dive into resume projects & design decisions)</option>
+            <option value="MIXED">Mixed (Balanced technical, project, and situational questions)</option>
+          </select>
+        </div>
+
+        <!-- 4. Difficulty Level -->
+        <div class="form-group">
+          <label class="form-label" for="difficulty-select">Difficulty Level *</label>
+          <select id="difficulty-select" class="form-control" required>
+            <option value="BEGINNER">Beginner (Foundational concepts & standard workflows)</option>
+            <option value="INTERMEDIATE" selected>Intermediate (Real-world scenarios, trade-offs, architecture)</option>
+            <option value="ADVANCED">Advanced (High-scale, concurrency, memory profiling, system design)</option>
+          </select>
+        </div>
+
+        <!-- 5. Question Count & Focus Area -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="question-count-select">Number of Questions</label>
+            <select id="question-count-select" class="form-control">
+              <option value="3">3 Questions (Quick Practice)</option>
+              <option value="5" selected>5 Questions (Standard Session)</option>
+              <option value="7">7 Questions (Comprehensive)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="focus-area-input">Special Focus (Optional)</label>
+            <input type="text" id="focus-area-input" class="form-control" placeholder="e.g. Spring Boot, SQL, Concurrency">
+          </div>
+        </div>
+
+        <!-- Transparency Callout -->
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin: 1rem 0; font-size: 0.85rem; color: var(--text-secondary);">
+          ℹ️ <strong>Demo Mode Notice:</strong> If no external AI provider API key is configured, our interview engine operates in a clearly marked <strong>Demo Mode</strong> generating grounded, deterministic questions and rubric evaluations.
+        </div>
+
+        <button type="submit" id="start-btn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.5rem;">
+          Generate Questions & Begin Interview &rarr;
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/interview-setup.js"></script>
+</body>
+</html>

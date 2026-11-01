@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Quality Report — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+          <a href="/resumes.html">&larr; Back to Resume Library</a>
+        </div>
+        <h1 class="page-title" id="resume-title">Resume Quality Report</h1>
+        <p class="page-subtitle" id="resume-subtitle">Comprehensive diagnostic breakdown and improvement recommendations.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button id="reanalyze-btn" class="btn btn-secondary">🔄 Re-Analyze</button>
+        <a id="edit-resume-link" href="#" class="btn btn-secondary">✍️ Revise Text & Suggestions</a>
+        <a id="practice-interview-link" href="#" class="btn btn-primary">🎯 Practice Mock Interview</a>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Quality Score Summary Card -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; align-items: center;">
+        <div style="text-align: center; border-right: 1px solid var(--border-light); padding-right: 1rem;">
+          <div class="score-badge-circle" id="overall-gauge">
+            <span class="score-badge-value" id="overall-score-val">—</span>
+            <span class="score-badge-label">Quality Score</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="overall-status-text">
+            Based on transparent criteria
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; margin-bottom: 0.25rem;">Section Completeness (35%)</div>
+          <div style="height: 10px; background: var(--bg-subtle); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.4rem;">
+            <div id="bar-completeness" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.5s ease;"></div>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>Core headings & contact presence</span>
+            <strong id="val-completeness">—</strong>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; margin-bottom: 0.25rem;">Readability & Impact (35%)</div>
+          <div style="height: 10px; background: var(--bg-subtle); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.4rem;">
+            <div id="bar-readability" style="width: 0%; height: 100%; background: var(--secondary); transition: width 0.5s ease;"></div>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>Action verbs & quantified metrics</span>
+            <strong id="val-readability">—</strong>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; margin-bottom: 0.25rem;">Role Relevance (30%)</div>
+          <div style="height: 10px; background: var(--bg-subtle); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.4rem;">
+            <div id="bar-relevance" style="width: 0%; height: 100%; background: var(--accent-amber); transition: width 0.5s ease;"></div>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span id="role-relevance-label">Keywords for target role</span>
+            <strong id="val-relevance">—</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);" id="analysis-summary-box">
+        Loading analysis summary...
+      </div>
+    </div>
+
+    <!-- Strengths, Missing Sections, and Categorized Skills -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <!-- Strengths Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Identified Strengths</h2>
+          <span class="badge badge-success">Positive Signals</span>
+        </div>
+        <ul id="strengths-list" style="padding-left: 1.25rem; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+          <li>Analyzing resume strengths...</li>
+        </ul>
+      </div>
+
+      <!-- Improvement Priorities Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Priority Improvements</h2>
+          <span class="badge badge-warning">Action Items</span>
+        </div>
+        <ul id="weaknesses-list" style="padding-left: 1.25rem; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+          <li>Analyzing improvement areas...</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Identified Skills -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <h2 class="card-title">Extracted Skills & Competencies</h2>
+        <span class="badge badge-primary" id="skills-count-badge">0 Skills</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Identified from the extracted document content and categorized by technical domain.
+      </p>
+      <div id="skills-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <span style="color: var(--text-muted);">No skills extracted.</span>
+      </div>
+    </div>
+
+    <!-- Targeted Suggestions Section -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Specific Actionable Recommendations</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Review each concrete recommendation below. You can accept or edit suggestions directly.
+          </p>
+        </div>
+        <a id="editor-deep-link" href="#" class="btn btn-secondary btn-sm">Open in Editor &rarr;</a>
+      </div>
+      <div id="suggestions-container">
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading recommendations...</div>
+      </div>
+    </div>
+
+    <!-- Raw Extracted Text Drawer (Collapsible) -->
+    <div class="card">
+      <div class="card-header" style="cursor: pointer;" id="toggle-extracted-text">
+        <h3 class="card-title" style="font-size: 1.05rem;">📄 Extracted Document Text Preview</h3>
+        <span id="text-toggle-arrow" style="font-size: 0.9rem; color: var(--text-muted);">Show &darr;</span>
+      </div>
+      <div id="extracted-text-body" style="display: none; margin-top: 1rem;">
+        <pre id="extracted-text-content" style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; max-height: 400px; overflow-y: auto; white-space: pre-wrap; font-family: monospace;"></pre>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/resume-detail.js"></script>
+</body>
+</html>

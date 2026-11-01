@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Interview Session — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .question-nav-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-medium);
+      background: white;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .question-nav-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .question-nav-btn.answered:not(.active) {
+      background: var(--success-light);
+      border-color: var(--success-border);
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content" style="max-width: 850px;">
+    <!-- Interview Session Header -->
+    <div style="background: white; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);" id="session-meta-role">Interview Role</div>
+          <h2 style="font-size: 1.35rem; font-weight: 700;" id="session-title">Interactive Mock Interview</h2>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button id="finish-btn" class="btn btn-primary btn-sm">Finish & Submit Interview</button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div style="margin-top: 1rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">
+          <span id="progress-text">Question 1 of 5</span>
+          <span id="answered-count-text">0 / 5 Answered</span>
+        </div>
+        <div style="height: 8px; background: var(--bg-subtle); border-radius: var(--radius-full); overflow: hidden;">
+          <div id="session-progress-bar" style="width: 20%; height: 100%; background: var(--primary); transition: width 0.3s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Quick Question Selector Pills -->
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem; align-items: center; flex-wrap: wrap;">
+        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-right: 0.25rem;">Navigate:</span>
+        <div id="question-pills-container" style="display: flex; gap: 0.4rem;"></div>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Active Question Card -->
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+        <span class="badge badge-primary" id="question-category-badge">Category</span>
+        <span class="badge badge-neutral" id="question-difficulty-badge">Difficulty</span>
+      </div>
+
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: 1rem;" id="question-text">
+        Loading question...
+      </h3>
+
+      <!-- Context / Hint Accordion -->
+      <div style="background: var(--bg-subtle); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 1.25rem; font-size: 0.9rem;">
+        <strong style="color: var(--primary-dark);">💡 Key points to address:</strong>
+        <span id="question-hint" style="color: var(--text-secondary); margin-left: 0.25rem;">Hint details...</span>
+      </div>
+
+      <!-- Answer Input Area -->
+      <div class="form-group">
+        <label class="form-label" for="answer-input">Your Answer:</label>
+        <textarea id="answer-input" class="form-control" style="min-height: 220px; font-size: 0.95rem; line-height: 1.6;" placeholder="Type your structured technical or behavioral response here. Mention specific mechanisms, architectural layers, and practical examples..."></textarea>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">
+          <span id="char-word-count">0 characters • 0 words</span>
+          <span id="auto-save-status">Saved</span>
+        </div>
+      </div>
+
+      <!-- Navigation & Action Buttons -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding-top: 1.25rem;">
+        <button id="prev-question-btn" class="btn btn-secondary">&larr; Previous</button>
+        <div style="display: flex; gap: 0.75rem;">
+          <button id="save-answer-btn" class="btn btn-secondary" title="Save answer to database">Save Answer</button>
+          <button id="next-question-btn" class="btn btn-primary">Next Question &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Submit Confirmation Modal -->
+  <div class="modal-backdrop" id="submit-confirm-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="card-title">Submit Interview For Evaluation?</h3>
+        <button class="modal-close" id="close-confirm-modal">&times;</button>
+      </div>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        You have answered <strong id="modal-answered-count">0</strong> out of <strong id="modal-total-count">0</strong> questions.
+      </p>
+      <div style="background: var(--bg-subtle); padding: 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Once submitted, your answers will be evaluated across Correctness (40%), Conceptual Understanding (25%), Relevance (20%), and Clarity (15%).
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn btn-secondary" id="cancel-submit-modal-btn">Continue Answering</button>
+        <button type="button" class="btn btn-primary" id="confirm-submit-eval-btn">Submit & View Results</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/interview.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Resume Analyzer & Mock Interview</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar" id="main-navbar"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title" id="welcome-heading">Welcome Back</h1>
+        <p class="page-subtitle">Track your resume improvements and interview preparation progress.</p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="/resumes.html" class="btn btn-secondary">Manage Resumes</a>
+        <a href="/interview-setup.html" class="btn btn-primary">Start Mock Interview</a>
+      </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Live Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div>
+          <div class="stat-value" id="stat-total-resumes">0</div>
+          <div class="stat-label">Uploaded Resumes</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div>
+          <div class="stat-value" id="stat-total-interviews">0</div>
+          <div class="stat-label">Interview Sessions</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+          <div class="stat-value" id="stat-completed-interviews">0</div>
+          <div class="stat-label">Completed Interviews</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div>
+          <div class="stat-value" id="stat-avg-score">—</div>
+          <div class="stat-label">Avg. Interview Score</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Banner -->
+    <div style="background: white; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h3 style="font-size: 1.15rem; font-weight: 700;">Ready for your next step?</h3>
+        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.2rem;">
+          Upload a new resume or select an existing one to generate grounded mock interview questions.
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="/resumes.html?upload=true" class="btn btn-primary btn-sm">+ Upload Resume</a>
+        <a href="/interview-setup.html" class="btn btn-secondary btn-sm">Setup Interview</a>
+      </div>
+    </div>
+
+    <!-- Recent Resumes & Recent Interviews Columns -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+      <!-- Recent Resumes Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Recent Resumes</h2>
+          <a href="/resumes.html" style="font-size: 0.85rem; font-weight: 600;">View All &rarr;</a>
+        </div>
+        <div id="recent-resumes-container">
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading resumes...</div>
+        </div>
+      </div>
+
+      <!-- Recent Interviews Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Recent Mock Interviews</h2>
+          <a href="/interview-history.html" style="font-size: 0.85rem; font-weight: 600;">View History &rarr;</a>
+        </div>
+        <div id="recent-interviews-container">
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading interviews...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" id="main-footer"></footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
